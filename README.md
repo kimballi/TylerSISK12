@@ -8,8 +8,6 @@ All my queries are written to be run with the database selected - not from maste
 
 This allows you to easily switch from SDMRTrain to SDMRT to run the query. 
 
-Please run the CreateAuditTable before running any of the update scripts to track your changes. 
-
 Feel free to contact me with questions. 
 
 kimberleeleech@gmail.com 
