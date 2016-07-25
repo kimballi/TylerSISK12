@@ -1,0 +1,52 @@
+/****** First Time K must enter with E100, E100 not allowed for grades 1-12 
+        Update sy.strDescription to current year
+        Update se.datEnrollmentDate to first day of school
+        ******/
+
+
+SELECT site.strStateCode as SchoolNumber
+      ,site.strName as SchoolName
+      ,s.strid as ID
+      ,g.strcode as grade
+      ,se.datEnrollmentDate as EnrollDate
+      ,ec.strdescription as EntryCode 
+      ,se.datWithdrawDate as EndDate
+      ,wc.strdescription as ExitCode
+      ,isnull(p.strLastName,'')+' '+isnull(p.strFirstName,'')+' '+isnull(p.strmiddlename,'') as StudentName
+      ,s.datDateOfBirth as BirthDate
+      ,'First Time K should enroll with E100' as EMessage
+FROM tblStudentEnrollment se
+inner join tblStudent s on s.lngId=se.lngStudentId
+inner join tblPeople p on p.lngId=s.lngPeopleId
+inner join tblSiteYear sy on sy.lngid=se.lngSiteYearId
+inner join tblsite site on site.lngid=sy.lngsiteid
+inner join lkugradelevels g on g.lngid=se.lnggradelevelid
+inner join lkuentrycodes ec on ec.lngid=se.lngEntryCodeId
+left join lkuwithdrawncodes wc on wc.lngid=se.lngWithdrawCodeId
+WHERE g.strcode='K' and se.datEnrollmentDate='2015-08-17 00:00:00' and ec.strcode NOT IN ('T105','S100','T101','E100','T102','R102','DUAL') and site.strStateCode NOT IN ('1020','7010')
+and sy.strDescription like '%1516'
+
+UNION ALL
+
+SELECT site.strStateCode as SchoolNumber
+      ,site.strName as SchoolName
+      ,s.strid as ID
+      ,g.strcode as grade
+      ,se.datEnrollmentDate as EnrollDate
+      ,ec.strdescription as EntryCode
+      ,se.datWithdrawDate as EndDate
+      ,wc.strdescription as ExitCode
+      ,isnull(p.strLastName,'')+' '+isnull(p.strFirstName,'')+' '+isnull(p.strmiddlename,'') as StudentName
+      ,s.datDateOfBirth as BirthDate
+      ,'Enroll Reason cannot be E100 - Reserved for First Time K' as EMessage
+FROM tblStudentEnrollment se
+inner join tblStudent s on s.lngId=se.lngStudentId
+inner join tblPeople p on p.lngId=s.lngPeopleId
+inner join tblSiteYear sy on sy.lngid=se.lngSiteYearId
+inner join tblsite site on site.lngid=sy.lngsiteid
+inner join lkugradelevels g on g.lngid=se.lnggradelevelid
+inner join lkuentrycodes ec on ec.lngid=se.lngEntryCodeId
+left join lkuwithdrawncodes wc on wc.lngid=se.lngWithdrawCodeId
+WHERE g.strcode NOT IN ('K','PK','PS') and ec.strcode='E100' and se.datEnrollmentDate='2015-08-17 00:00:00'
+and sy.strDescription like '%1516'
+
